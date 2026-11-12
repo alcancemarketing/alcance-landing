@@ -1,0 +1,85 @@
+/* Animação "O cliente chega pronto." (Topo do site)
+   Palco virtual de 1000 x 1460; o JS escala para caber no .palco sem cortar (contain).
+   Tudo com prefixo anim-cp-; nenhum estilo global. Só transform e opacity são animados. */
+
+.anim-cp{position:absolute;inset:0;overflow:visible;pointer-events:none;transform-style:preserve-3d}
+.anim-cp-palco{position:absolute;left:50%;top:50%;width:1000px;height:1460px;margin:-730px 0 0 -500px;transform:scale(var(--anim-cp-k,.4));transform-origin:50% 50%;opacity:0;transform-style:preserve-3d}
+.anim-cp.anim-cp-pronto .anim-cp-palco{opacity:1}
+.anim-cp-cena{position:absolute;inset:0;perspective:2200px;perspective-origin:500px 700px;transform-style:preserve-3d}
+.anim-cp, .anim-cp *{box-sizing:border-box}
+.anim-cp p{margin:0}
+
+/* Celular: a mesma moldura real usada no site; a tela fica por baixo dela */
+.anim-cp-cel{position:absolute;left:300px;top:309px;width:400px;height:822px;transform-style:preserve-3d;
+  filter:drop-shadow(0 40px 48px rgba(0,0,0,.55)) drop-shadow(0 8px 14px rgba(0,0,0,.45))}
+.anim-cp-moldura{position:absolute;inset:0;width:100%;height:100%}
+.anim-cp-tela{position:absolute;left:4.869%;top:2.443%;width:90.417%;height:95.152%;border-radius:12.1%/5.6%;overflow:hidden;background:#0b141a;
+  font-family:Outfit,system-ui,sans-serif;color:#fff}
+.anim-cp-tela::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.1) 0%,rgba(255,255,255,0) 36%)}
+.anim-cp-hora{position:absolute;left:34px;top:17px;font-size:15px;font-weight:600}
+
+/* app de mensagens (verde, sem logo) */
+.anim-cp-chat-topo{position:absolute;left:0;right:0;top:0;height:122px;background:#1f2c34;display:flex;align-items:flex-end;gap:12px;padding:0 18px 16px}
+.anim-cp-av{width:40px;height:40px;border-radius:50%;background:#2a3942;color:#d6d6db;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;flex:none}
+.anim-cp-chat-nome{font-size:17px;font-weight:600;line-height:1.2}
+.anim-cp-chat-st{font-size:13px;color:#8e8e95}
+.anim-cp-bal{position:absolute;max-width:250px;padding:11px 15px;border-radius:16px;font-size:16px;line-height:1.3}
+.anim-cp-bal-cli{right:14px;top:150px;background:#005c4b;border-bottom-right-radius:5px;padding-bottom:24px;transform-origin:100% 100%}
+.anim-cp-bal-loja{left:14px;top:262px;background:#1f2c34;border-bottom-left-radius:5px;transform-origin:0 100%}
+.anim-cp-digitando{left:14px;top:262px;display:flex;gap:5px;padding:15px 16px;background:#1f2c34;border-bottom-left-radius:5px}
+.anim-cp-digitando i{display:block;width:7px;height:7px;border-radius:50%;background:#8e8e95}
+.anim-cp-tick{position:absolute;right:11px;bottom:6px;font-size:11px;color:rgba(255,255,255,.6);display:flex;gap:3px;align-items:center}
+.anim-cp-h{font-size:11px;color:rgba(255,255,255,.5);margin-left:6px}
+.anim-cp-venda{position:absolute;left:14px;right:14px;top:340px;height:112px;border-radius:14px;background:#202026;border:1px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;gap:14px}
+.anim-cp-venda p{font-size:33px;font-weight:700;letter-spacing:-.02em}
+.anim-cp-ok{width:40px;height:40px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center}
+.anim-cp-ok svg{width:22px;height:22px}
+.anim-cp-aval{position:absolute;left:14px;right:14px;top:472px;height:132px;border-radius:14px;background:#1b1b20;border:1px solid rgba(255,255,255,.08);text-align:center;padding-top:22px}
+.anim-cp-aval p{font-size:16px;color:#d6d6db}
+.anim-cp-estrelas{display:flex;justify-content:center;gap:8px;margin-top:14px}
+.anim-cp-est{position:relative;width:44px;height:44px}
+.anim-cp-est svg{position:absolute;inset:0;width:44px;height:44px}
+.anim-cp-est .anim-cp-on{opacity:0}
+.anim-cp-campo{position:absolute;left:14px;right:70px;bottom:26px;height:46px;border-radius:8px;background:#1f2c34;display:flex;align-items:center;padding:0 16px;font-size:15px;color:#8e8e95}
+.anim-cp-enviar{position:absolute;right:14px;bottom:26px;width:46px;height:46px;border-radius:8px;background:#25d366;display:flex;align-items:center;justify-content:center}
+
+/* Cartões das etapas: vidro com desfoque, borda clara de 1px */
+.anim-cp-card{position:absolute;left:500px;top:720px;padding:18px;border-radius:20px;color:#fff;font-family:Outfit,system-ui,sans-serif;opacity:0;
+  background:linear-gradient(155deg,rgba(255,255,255,.14),rgba(255,255,255,.04) 60%);background-color:rgba(27,27,32,.62);
+  border:1px solid rgba(255,255,255,.2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 30px 60px -24px rgba(0,0,0,.7),0 10px 20px -12px rgba(0,0,0,.5);
+  backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.anim-cp-card{background-color:rgba(27,27,32,.95)}}
+.anim-cp-ad{width:420px;margin:-208px 0 0 -210px}
+.anim-cp-vid{width:440px;margin:-176px 0 0 -220px}
+.anim-cp-bus{width:430px;margin:-196px 0 0 -215px}
+.anim-cp-linha{display:flex;align-items:center;gap:12px}
+.anim-cp-nm{font-size:16px;font-weight:600}
+.anim-cp-sm{font-size:13px;color:#a8a8b0}
+.anim-cp-img{border-radius:12px;background:rgba(38,38,46,.9);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.anim-cp-anel{width:46px;height:46px;border-radius:50%;padding:2.5px;flex:none;background:conic-gradient(from 200deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5,#feda75)}
+.anim-cp-anel .anim-cp-av{width:41px;height:41px;border:2.5px solid #1b1b20}
+.anim-cp-pontos{margin-left:auto;color:#d6d6db;font-size:12px;letter-spacing:1px}
+.anim-cp-ad .anim-cp-img{height:200px;margin-top:14px;border-radius:12px 12px 0 0}
+.anim-cp-botao{height:42px;border-radius:0 0 8px 8px;background:#0095f6;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:space-between;padding:0 16px}
+.anim-cp-icones{display:flex;gap:14px;margin-top:12px}
+.anim-cp-icones svg{width:26px;height:26px}
+.anim-cp-rodape{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px}
+.anim-cp-rodape b{font-size:19px;font-weight:600}
+.anim-cp-rodape span{font-size:16px;color:#d6d6db}
+.anim-cp-vid .anim-cp-img{height:228px}
+.anim-cp-play{position:absolute;width:76px;height:54px;border-radius:8px;background:#ff0033;display:flex;align-items:center;justify-content:center}
+.anim-cp-barra{height:4px;border-radius:2px;background:rgba(255,255,255,.2);margin-top:10px;overflow:hidden}
+.anim-cp-prog{height:100%;width:100%;background:#ff0033;transform-origin:0 50%;transform:scaleX(.3)}
+.anim-cp-titulo{font-size:19px;font-weight:600}
+.anim-cp-chips{display:flex;gap:8px;margin:12px 0 0 48px}
+.anim-cp-chip{font-size:13px;color:#d6d6db;padding:6px 10px;border-radius:6px;background:rgba(255,255,255,.08)}
+.anim-cp-busca{height:50px;border-radius:8px;background:#303134;display:flex;align-items:center;gap:10px;padding:0 16px;font-size:16px}
+.anim-cp-cores{display:flex;gap:3px}
+.anim-cp-cores i{display:block;width:7px;height:7px;border-radius:50%}
+.anim-cp-mapa{margin-top:12px;border-radius:12px;overflow:hidden;height:130px}
+.anim-cp-mapa svg{display:block}
+.anim-cp-res{display:flex;gap:14px;margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(32,32,38,.8);border:1px solid rgba(255,255,255,.06)}
+.anim-cp-res .anim-cp-img{width:84px;height:84px;flex:none}
+.anim-cp-tag{display:inline-block;margin-top:6px;font-size:13px;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.08)}

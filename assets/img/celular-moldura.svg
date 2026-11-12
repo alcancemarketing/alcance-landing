@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 1398" width="680" height="1398">
+<!-- Moldura de celular genérica, desenho próprio da Alcance (sem marca de fabricante). -->
+<defs>
+<linearGradient id="corpo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3a42"/><stop offset=".45" stop-color="#1e1e23"/><stop offset="1" stop-color="#2c2c33"/></linearGradient>
+<linearGradient id="aro" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6b6b74"/><stop offset=".5" stop-color="#2a2a30"/><stop offset="1" stop-color="#5a5a62"/></linearGradient>
+</defs>
+<!-- botões laterais -->
+<rect x="0" y="300" width="6" height="110" rx="3" fill="#2a2a30"/>
+<rect x="0" y="430" width="6" height="110" rx="3" fill="#2a2a30"/>
+<rect x="674" y="380" width="6" height="170" rx="3" fill="#2a2a30"/>
+<!-- corpo com a tela vazada -->
+<path fill-rule="evenodd" fill="url(#corpo)" d="M100 0H580A96 96 0 0 1 676 96V1302A96 96 0 0 1 580 1398H100A96 96 0 0 1 4 1302V96A96 96 0 0 1 100 0Z M107.5 34.2H573.5A74.4 74.5 0 0 1 647.9 108.7V1289.9A74.4 74.5 0 0 1 573.5 1364.4H107.5A74.4 74.5 0 0 1 33.1 1289.9V108.7A74.4 74.5 0 0 1 107.5 34.2Z"/>
+<!-- aro externo fino -->
+<path fill="none" stroke="url(#aro)" stroke-width="3" d="M100.5 1.5H579.5A95 95 0 0 1 674.5 96.5V1301.5A95 95 0 0 1 579.5 1396.5H100.5A95 95 0 0 1 5.5 1301.5V96.5A95 95 0 0 1 100.5 1.5Z"/>
+<!-- borda preta em volta da tela -->
+<path fill="none" stroke="#050506" stroke-width="10" d="M107.5 29.2H573.5A79.4 79.5 0 0 1 652.9 108.7V1289.9A79.4 79.5 0 0 1 573.5 1369.4H107.5A79.4 79.5 0 0 1 28.1 1289.9V108.7A79.4 79.5 0 0 1 107.5 29.2Z"/>
+<!-- câmera frontal (furo redondo, genérico) -->
+<circle cx="340" cy="66.2" r="12" fill="#050506"/>
+<circle cx="343" cy="63.2" r="3.5" fill="#1d2a3a"/>
+</svg>

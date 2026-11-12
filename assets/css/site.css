@@ -1,0 +1,858 @@
+/* ═══════════════════════════════════════════════
+   ALCANCE — site institucional
+   Referência: proposta comercial da Alcance (modo escuro).
+   Camadas: fundo → painel → cartão → bloco claro → branco.
+   Grade de 1px com "+" nos cruzamentos. O destaque é o branco.
+═══════════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --fundo:#0D0D0F;
+  --fundo-luz:#1C1C22;
+  --painel:#1B1B20;
+  --painel-borda:#2C2C33;
+  --cartao:#202026;
+  --cartao-borda:#33333B;
+  --destaque-escuro:#26262E;
+  --linha:#2A2A2F;
+  --bloco-claro:#F3F3F5;
+  --bloco-claro-texto:#1D1D1F;
+  --branco:#FFFFFF;
+  --texto-titulo:#FFFFFF;
+  --texto:#D6D6DB;
+  --texto-secundario:#A8A8B0;
+  --rotulo:#8E8E95;
+  --acento:#F0A64A; /* só filete fino em notas */
+
+  --fonte:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --ease-entra:cubic-bezier(.22,1,.36,1);
+  --m-in:150ms; --m-out:120ms; --m-press:90ms; --m-slide:240ms;
+
+  --largura:1200px;
+  --gutter:clamp(16px,4.4vw,40px);
+  --respiro:clamp(16px,2.4vw,32px);
+  --borda-x:max(var(--gutter),calc((100% - var(--largura)) / 2 + var(--gutter)));
+  --raio:8px;
+  --raio-g:12px;
+}
+
+html{-webkit-text-size-adjust:100%;scrollbar-color:var(--cartao-borda) var(--fundo)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{
+  background:var(--fundo);color:var(--texto);
+  font-family:var(--fonte);font-size:17px;line-height:1.6;font-weight:400;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+@media (min-width:900px){body{font-size:18px}}
+::selection{background:var(--branco);color:var(--fundo)}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--branco);outline-offset:2px;border-radius:4px}
+
+.pular{position:absolute;left:12px;top:-60px;z-index:100;background:var(--branco);color:var(--fundo);padding:10px 14px;border-radius:var(--raio);text-decoration:none;font-weight:500}
+.pular:focus{top:12px}
+
+/* ─── grade ─── */
+.wrap{max-width:var(--largura);margin:0 auto;padding:0 var(--gutter)}
+.grade{position:relative}
+.grade::before,.grade::after{
+  content:'';position:absolute;top:0;bottom:0;width:1px;background:var(--linha);pointer-events:none;z-index:2;
+  left:var(--borda-x);
+}
+.grade::after{left:auto;right:var(--borda-x)}
+.grade .wrap{padding-left:calc(var(--gutter) + var(--respiro));padding-right:calc(var(--gutter) + var(--respiro))}
+.faixa{position:relative;border-top:1px solid var(--linha)}
+.mais{position:absolute;top:-6px;width:11px;height:11px;z-index:4;pointer-events:none;left:calc(var(--borda-x) - 5px)}
+.mais--d{left:auto;right:calc(var(--borda-x) - 5px)}
+.mais::before,.mais::after{content:'';position:absolute;background:var(--rotulo)}
+.mais::before{left:5px;top:0;width:1px;height:11px}
+.mais::after{top:5px;left:0;height:1px;width:11px}
+
+/* ─── tipografia ─── */
+h1,h2,h3{font-weight:600;color:var(--texto-titulo);text-wrap:balance}
+h1{font-size:clamp(2.9rem,8.4vw,5.6rem);line-height:.98;letter-spacing:-.04em}
+h2{font-size:clamp(2.1rem,5vw,3.5rem);line-height:1.04;letter-spacing:-.04em;max-width:17ch}
+h3{font-size:clamp(1.6rem,3.2vw,2.1rem);line-height:1.1;letter-spacing:-.03em}
+.rotulo{font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--rotulo)}
+.lead{color:var(--texto);max-width:56ch;text-wrap:pretty}
+.lead strong{color:var(--texto-titulo);font-weight:600}
+.filete{width:60px;height:3px;background:var(--branco);border:0;margin:1.75rem 0}
+
+/* ─── botões ─── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.55em;
+  min-height:48px;padding:0 1.25rem;border-radius:var(--raio);
+  font:500 1rem/1.2 var(--fonte);text-decoration:none;text-align:center;
+  border:1px solid transparent;
+  transition:transform var(--m-out) var(--ease),background-color var(--m-out) var(--ease),border-color var(--m-out) var(--ease);
+}
+.btn-branco{background:var(--branco);color:var(--fundo)}
+.btn-borda{color:var(--texto-titulo);border-color:var(--cartao-borda);background:transparent}
+.btn-escuro{background:var(--fundo);color:var(--branco)}
+.btn svg{width:18px;height:18px;flex:none}
+.btn .seta{transition:transform var(--m-out) var(--ease)}
+@media (hover:hover) and (pointer:fine){
+  .btn:hover{transform:translateY(-1px);transition-duration:var(--m-in)}
+  .btn-branco:hover{background:#E4E4E8}
+  .btn-borda:hover{background:var(--painel);border-color:#4A4A54}
+  .btn-escuro:hover{background:var(--destaque-escuro)}
+  .btn:hover .seta{transform:translateX(3px);transition-duration:var(--m-in)}
+}
+.btn:active{transform:translateY(1px) scale(.985);transition-duration:var(--m-press)}
+@media (max-width:420px){.btn{font-size:.92rem;padding:0 .9rem;gap:.4em}}
+
+.link{
+  text-decoration:none;color:var(--texto-titulo);font-weight:500;
+  background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat,
+             linear-gradient(var(--cartao-borda),var(--cartao-borda)) 0 100%/100% 1px no-repeat;
+  padding-bottom:3px;transition:background-size var(--m-out) var(--ease);
+}
+@media (hover:hover) and (pointer:fine){.link:hover{background-size:100% 1px,100% 1px;transition-duration:var(--m-in)}}
+.link:focus-visible{background-size:100% 1px,100% 1px}
+
+/* ═══ NAV ═══ */
+.nav{position:sticky;top:0;z-index:50;background:rgba(13,13,15,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--linha)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;height:64px}
+.nav-logo img{height:21px;width:auto}
+.nav-links{display:none;list-style:none;gap:1.75rem;font-size:.94rem}
+.nav-links a{color:var(--texto-secundario);text-decoration:none;padding:6px 0;transition:color var(--m-out) var(--ease)}
+@media (hover:hover) and (pointer:fine){.nav-links a:hover{color:var(--texto-titulo);transition-duration:var(--m-in)}}
+.nav .btn{min-height:44px;padding:0 1rem;font-size:.94rem}
+@media (min-width:920px){.nav-links{display:flex}}
+
+/* ═══ TOPO ═══ */
+.topo{
+  position:relative;overflow:hidden;isolation:isolate;
+  /* a luz difusa da capa da proposta */
+  background:radial-gradient(120% 80% at 85% 10%,var(--fundo-luz) 0%,var(--fundo) 60%);
+}
+.topo-texto{padding-top:clamp(48px,9vh,104px);max-width:760px}
+.topo h1{margin:1.1rem 0 0}
+.topo h1 .l{display:block}
+.topo .lead+.lead{margin-top:.9rem}
+.topo-acoes{display:flex;flex-direction:column;gap:12px;margin-top:2.25rem}
+.topo-acoes .btn{width:100%;min-height:52px}
+@media (min-width:560px){.topo-acoes{flex-direction:row;flex-wrap:wrap}.topo-acoes .btn{width:auto}}
+
+/* palco: animação "O cliente chega pronto." (anim-cliente-pronto.css) */
+.topo-grade{display:grid;gap:clamp(32px,5vh,56px);padding-bottom:clamp(48px,8vh,88px)}
+@media (min-width:900px){.topo-grade{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);align-items:center;min-height:calc(100svh - 64px);padding-bottom:32px}}
+.palco{position:relative;z-index:1;perspective:1400px;display:grid;place-items:center;min-height:clamp(460px,130vw,560px)}
+@media (min-width:900px){.palco{min-height:0;height:min(78svh,680px)}}
+.camada{will-change:transform}
+
+/* aparelho: moldura iPhone 13 (Meta Design, licença de mockup); a tela fica por baixo da moldura */
+
+/* luz laranja: só iluminação de fundo (texto e botões seguem brancos) */
+.topo{background:
+  radial-gradient(60% 46% at 62% 74%,rgba(232,112,42,.38) 0%,rgba(184,64,14,.16) 42%,transparent 72%),
+  radial-gradient(120% 80% at 85% 10%,var(--fundo-luz) 0%,var(--fundo) 60%)}
+@media (min-width:900px){.topo{background:
+  radial-gradient(42% 62% at 76% 48%,rgba(232,112,42,.42) 0%,rgba(184,64,14,.18) 42%,transparent 72%),
+  radial-gradient(120% 80% at 85% 10%,var(--fundo-luz) 0%,var(--fundo) 60%)}}
+
+/* relatório "do anúncio até a venda": tela inclinada que endireita ao rolar */
+
+.relatorio{
+  transform-origin:50% 0;
+  mask-image:linear-gradient(180deg,#000 60%,transparent 100%);
+  -webkit-mask-image:linear-gradient(180deg,#000 60%,transparent 100%);
+}
+.tela-print{
+  aspect-ratio:16/9;border-radius:var(--raio-g);overflow:hidden;
+  background:var(--painel);border:1px solid rgba(255,255,255,.06);
+  display:flex;flex-direction:column;
+}
+
+/* espaço marcado até o print chegar */
+
+/* poses iniciais: só quando há movimento e o GSAP vai assentar */
+html.m-3d .relatorio{transform:rotateX(18deg) scale(.94)}
+@media (max-width:759px){html.m-3d .relatorio{transform:rotateX(8deg) scale(.97)}}
+
+/* ═══ TARJA ═══ */
+.tarja{position:relative;z-index:3;background:var(--branco);color:var(--fundo)}
+.tarja .wrap{display:flex;flex-direction:column;gap:20px;padding-top:32px;padding-bottom:32px}
+.tarja p{font-size:clamp(1.15rem,2.3vw,1.45rem);font-weight:600;letter-spacing:-.015em;line-height:1.3;max-width:42ch}
+.tarja .btn{width:100%;min-height:52px}
+@media (min-width:860px){
+  .tarja .wrap{flex-direction:row;align-items:center;justify-content:space-between;gap:40px;padding-top:36px;padding-bottom:36px}
+  .tarja .btn{width:auto}
+}
+
+/* ═══ SEÇÕES ═══ */
+.secao{padding:clamp(72px,11vh,128px) 0}
+.secao-painel{background:var(--painel);border-top-color:var(--painel-borda)}
+
+/* ═══ SERVIÇOS EM ABAS ═══ */
+
+.aba{
+  position:relative;z-index:1;flex:none;
+  border:0;background:none;color:var(--texto-secundario);cursor:pointer;
+  font:500 .95rem/1 var(--fonte);height:44px;padding:0 1rem;border-radius:var(--raio);
+  white-space:nowrap;transition:color var(--m-slide) var(--ease);
+}
+@media (hover:hover) and (pointer:fine){.aba:hover{color:var(--texto-titulo)}}
+.aba[aria-selected="true"]{color:var(--fundo)}
+
+.selo{display:inline-block;margin-bottom:1rem;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--fundo);background:var(--branco);border-radius:6px;padding:.3em .65em}
+
+/* a peça: tela real, levemente inclinada, dissolvendo no fundo */
+
+/* nota, como nas propostas: filete fino em --acento */
+.nota{background:var(--destaque-escuro);border-left:3px solid var(--acento);border-radius:0 10px 10px 0;padding:14px 18px;color:var(--texto)}
+
+/* ═══ ENTRADA DO TOPO (uma vez, ao carregar) ═══ */
+@media (prefers-reduced-motion:no-preference){
+  .m-enter .topo h1 .l{overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+  .m-enter .topo h1 .l>span{display:inline-block;transform:translateY(105%);animation:sobe 700ms var(--ease-entra) forwards;animation-delay:calc(var(--i) * 80ms + 60ms)}
+  .m-enter .topo .entra{opacity:0;transform:translateY(12px);animation:aparece 520ms var(--ease-entra) forwards;animation-delay:calc(380ms + var(--i) * 60ms)}
+  .m-enter .topo .palco{opacity:0;transform:translateY(24px);animation:aparece 900ms var(--ease-entra) 260ms forwards}
+}
+@keyframes sobe{to{transform:none}}
+@keyframes aparece{to{opacity:1;transform:none}}
+@keyframes assenta{to{transform:none}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-duration:0s!important}
+}
+
+/* ajustes da revisão de prints (rodada 3) */
+@media (min-width:860px){.tarja .btn{white-space:nowrap}}
+
+/* ═══ PROFUNDIDADE (rodada 4: referências Igloo e Apple) ═══ */
+/* luz difusa que se move devagar atrás de tudo */
+.luzes{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.luzes span{position:absolute;border-radius:50%;filter:blur(40px);opacity:.55}
+.luzes span:nth-child(1){width:60vw;height:60vw;max-width:820px;max-height:820px;right:-12vw;top:-18vw;background:radial-gradient(closest-side,#2A2A33,transparent)}
+.luzes span:nth-child(2){width:40vw;height:40vw;max-width:560px;max-height:560px;left:-10vw;top:38%;background:radial-gradient(closest-side,#1F1F27,transparent)}
+@media (prefers-reduced-motion:no-preference){
+  .luzes span:nth-child(1){animation:deriva1 22s ease-in-out infinite alternate}
+  .luzes span:nth-child(2){animation:deriva2 26s ease-in-out infinite alternate}
+}
+@keyframes deriva1{to{transform:translate(-8vw,6vw) scale(1.12)}}
+@keyframes deriva2{to{transform:translate(10vw,-4vw) scale(.9)}}
+
+.topo-texto{position:relative;z-index:1}
+
+/* ═══ VIDRO FOSCO (rodada 5) ═══
+   Só onde há luz se movendo atrás. Sem suporte a backdrop-filter, vira o cinza sólido. */
+:root{
+  --vidro-fundo:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
+  --vidro-borda:rgba(255,255,255,.09);
+  --vidro-luz:inset 0 1px 0 rgba(255,255,255,.13);
+  --vidro-desfoque:blur(18px) saturate(140%);
+  --sombra-funda:0 32px 64px -32px rgba(0,0,0,.75),0 12px 24px -16px rgba(0,0,0,.5);
+  /* grão de 3%: ruído em SVG, sem imagem externa */
+  --grao:url("/assets/img/grao.svg"); /* caminho absoluto: url dentro de variável se resolve pela página */
+}
+.nav{background:rgba(13,13,15,.62);border-bottom-color:rgba(255,255,255,.07);box-shadow:var(--vidro-luz);backdrop-filter:var(--vidro-desfoque);-webkit-backdrop-filter:var(--vidro-desfoque)}
+.tela-print{
+  background:var(--grao),var(--vidro-fundo);background-color:rgba(27,27,32,.55);
+  border-color:var(--vidro-borda);box-shadow:var(--vidro-luz),var(--sombra-funda);
+  backdrop-filter:var(--vidro-desfoque);-webkit-backdrop-filter:var(--vidro-desfoque);
+}
+
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .nav{background:rgba(13,13,15,.96)}
+  
+  
+  .tela-print{background:var(--painel)}
+}
+/* grão também no fundo do topo e dos serviços */
+.topo::after,#servicos::after{content:'';position:absolute;inset:0;z-index:-1;background:var(--grao);pointer-events:none}
+
+/* luz atrás dos serviços: é o que o vidro desfoca */
+#servicos{isolation:isolate}
+.luzes-servicos span{opacity:.7}
+.luzes-servicos span:nth-child(1){left:auto;right:-6vw;top:22%;width:46vw;height:46vw;max-width:680px;max-height:680px;background:radial-gradient(closest-side,#3A3A46,transparent)}
+.luzes-servicos span:nth-child(2){left:-8vw;top:40%;width:36vw;height:36vw;max-width:520px;max-height:520px;background:radial-gradient(closest-side,#30303A,transparent)}
+@media (max-width:899px){.luzes-servicos span{animation:none!important}}
+
+/* luz que segue o mouse no cartão (computador) */
+
+/* ═══ SERVIÇOS EM LISTA GRANDE (computador) ═══ */
+@media (min-width:960px){
+  
+  
+  .aba{
+    height:auto;padding:16px 18px 16px 22px;text-align:left;white-space:normal;
+    font-size:clamp(1.2rem,1.75vw,1.55rem);font-weight:500;letter-spacing:-.025em;line-height:1.15;
+  }
+  .aba[aria-selected="true"]{color:var(--texto-titulo)}
+  
+  
+  
+  
+  
+}
+
+@media (min-width:900px) and (max-height:960px){
+  .topo-texto{padding-top:24px}
+  .topo .filete{margin:1.25rem 0}
+  .topo-acoes{margin-top:1.6rem}
+}
+/* as entradas laterais dos serviços (x ±80px) não podem criar rolagem para o lado */
+#servicos{overflow-x:clip}
+/* foco visível também sobre a faixa branca */
+.tarja :focus-visible{outline-color:var(--fundo)}
+.nota em{font-style:normal;font-weight:500;color:var(--texto-titulo)}
+
+/* ═══ LUZ LARANJA E CELULARES REAIS (rodada 6) ═══ */
+.topo .luzes span:nth-child(1){right:-6vw;top:4vw;opacity:.75;background:radial-gradient(closest-side,rgba(240,150,70,.5),transparent)}
+.topo .luzes span:nth-child(2){left:auto;right:20vw;top:46%;opacity:.7;background:radial-gradient(closest-side,rgba(193,60,10,.38),transparent)}
+@media (max-width:899px){.topo .luzes span:nth-child(1){top:auto;bottom:-10vw;right:-20vw}.topo .luzes span:nth-child(2){right:30vw;top:auto;bottom:5%}}
+.luzes-servicos span:nth-child(1){background:radial-gradient(closest-side,rgba(232,112,42,.3),transparent)}
+.luzes-servicos span:nth-child(2){background:radial-gradient(closest-side,rgba(184,64,14,.24),transparent)}
+/* borda de cima do vidro acesa pela luz */
+
+/* serviços com tela de celular: a peça dentro de um aparelho real, em perspectiva */
+
+/* luz mais forte, como nas referências: nasce atrás do celular e se apaga no preto */
+.topo{background:
+  radial-gradient(70% 50% at 60% 78%,rgba(242,118,36,.62) 0%,rgba(193,60,10,.3) 38%,transparent 72%),
+  radial-gradient(120% 80% at 85% 10%,var(--fundo-luz) 0%,var(--fundo) 60%)}
+@media (min-width:900px){.topo{background:
+  radial-gradient(46% 72% at 78% 52%,rgba(242,118,36,.66) 0%,rgba(193,60,10,.32) 36%,rgba(90,30,8,.12) 58%,transparent 76%),
+  radial-gradient(120% 80% at 85% 10%,var(--fundo-luz) 0%,var(--fundo) 60%)}}
+.topo .luzes span:nth-child(1){opacity:.95;background:radial-gradient(closest-side,rgba(250,160,80,.6),transparent)}
+.luzes-servicos span:nth-child(1){background:radial-gradient(closest-side,rgba(232,112,42,.42),transparent)}
+
+/* o celular dos serviços mostra a parte de cima da tela e dissolve embaixo (sem tela vazia) */
+
+/* ═══ FAIXA DO CHECK-UP (rodada 8): destaque logo abaixo do topo ═══ */
+.tarja .wrap{padding-top:clamp(40px,7vh,72px);padding-bottom:clamp(40px,7vh,72px);gap:28px}
+.tarja h2{color:var(--fundo);font-size:clamp(2.1rem,5vw,3.6rem);line-height:1.02;letter-spacing:-.04em;max-width:16ch}
+.tarja .tarja-texto p{margin-top:.9rem;font-size:clamp(1.05rem,1.7vw,1.3rem);font-weight:400;letter-spacing:0;line-height:1.45;color:#3A3A42;max-width:42ch}
+.tarja .btn{min-height:58px;padding:0 1.6rem;font-size:1.05rem}
+
+/* ═══ SERVIÇOS E PRODUTOS EM LISTA (rodada 8): tudo à vista, como no primeiro site ═══ */
+.lista-cab h2{font-size:clamp(2.6rem,7.4vw,5rem);line-height:.98;max-width:11ch}
+.lista-cab .lead{margin-top:1.2rem;color:var(--texto-secundario);max-width:48ch}
+.lista-servicos{margin-top:clamp(32px,5vh,48px);border-top:1px solid rgba(255,255,255,.12)}
+.item-servico{border-bottom:1px solid rgba(255,255,255,.12)}
+.item-servico summary{
+  list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  min-height:68px;padding:18px 4px;cursor:pointer;
+  font-size:clamp(1.25rem,2.3vw,1.65rem);font-weight:500;letter-spacing:-.025em;line-height:1.2;color:var(--texto-titulo);
+}
+.item-servico summary::-webkit-details-marker{display:none}
+.item-nome{transition:transform var(--m-slide) var(--ease-entra)}
+.item-nome .selo{margin:0 0 0 .55rem;vertical-align:.25em;font-size:.6rem}
+.item-seta{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:var(--texto-secundario);transition:transform var(--m-slide) var(--ease-entra),color var(--m-slide) var(--ease)}
+.item-servico[open] .item-seta{transform:rotate(90deg);color:var(--texto-titulo)}
+@media (hover:hover) and (pointer:fine){
+  .item-servico summary:hover .item-nome{transform:translateX(6px)}
+  .item-servico summary:hover .item-seta{color:var(--texto-titulo)}
+}
+.item-corpo{display:grid;justify-items:start;gap:14px;padding:0 4px 24px;max-width:54ch}
+.item-corpo p{color:var(--texto)}
+.lista-grupo{margin-top:36px;padding:0 4px 12px;border-bottom:1px solid rgba(255,255,255,.12);font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--rotulo)}
+#servicos .nota{margin-top:32px}
+/* abre e fecha com a altura animada onde o navegador permite (sem JS) */
+@supports (interpolate-size:allow-keywords){
+  .item-servico{interpolate-size:allow-keywords}
+  .item-servico::details-content{height:0;overflow:clip;transition:height 320ms var(--ease-entra),content-visibility 320ms allow-discrete}
+  .item-servico[open]::details-content{height:auto}
+}
+@media (min-width:960px){
+  #servicos .wrap{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);column-gap:clamp(48px,6vw,96px);align-items:start}
+  .lista-cab{position:sticky;top:112px}
+  .lista-servicos{margin-top:0}
+  #servicos .nota{grid-column:2}
+}
+
+/* celular: o texto "Estratégia, anúncios e conteúdo…" desce para baixo da animação, que é o que ela ilustra */
+@media (max-width:899px){
+  .topo-grade{gap:0}
+  .topo-texto{display:contents}
+  .topo-texto>*{order:0}
+  .topo .palco{order:1;margin-top:clamp(28px,5vh,48px)}
+  .topo .lead-palco{order:2;margin-top:4px}
+}
+@media (max-width:899px){.topo-texto>.rotulo{margin-top:clamp(48px,9vh,104px)}}
+
+/* relatório fictício "do anúncio até a venda" (11/11): exemplo de como o cliente acompanha os números */
+.tela-print{container-type:inline-size}
+.rel-exemplo{margin-left:auto;font-style:normal;font-size:.72rem;letter-spacing:.04em;color:var(--rotulo);border:1px solid var(--cartao-borda);border-radius:6px;padding:3px 8px}
+.rel{flex:1;display:flex;flex-direction:column;gap:clamp(10px,2.2cqw,22px);padding:clamp(12px,3cqw,32px);min-height:0}
+.rel-cab{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.rel-cab strong{color:var(--branco);font-weight:600;font-size:clamp(.95rem,2.2cqw,1.35rem)}
+.rel-cab span{color:var(--rotulo);font-size:clamp(.7rem,1.3cqw,.9rem)}
+.rel-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,1.4cqw,14px);margin:0}
+.rel-kpis div{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:clamp(8px,1.6cqw,16px)}
+.rel-kpis dt{color:var(--rotulo);font-size:clamp(.62rem,1.15cqw,.8rem);line-height:1.25}
+.rel-kpis dd{margin:.3em 0 0;color:var(--branco);font-weight:600;font-size:clamp(1rem,2.6cqw,1.7rem);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.rel-corpo{flex:1;display:grid;grid-template-columns:1.6fr 1fr;gap:clamp(10px,2cqw,24px);min-height:0}
+.rel-funil{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;justify-content:space-between;gap:6px}
+.rel-funil li{position:relative;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:clamp(6px,1.1cqw,11px) 12px;border-radius:6px;font-size:clamp(.7rem,1.3cqw,.92rem);color:var(--texto);isolation:isolate}
+.rel-funil li::before{content:'';position:absolute;inset:0;width:var(--l);border-radius:inherit;background:rgba(255,255,255,.08);z-index:-1}
+.rel-funil li:last-child::before{background:rgba(255,255,255,.2)}
+.rel-funil b{color:var(--branco);font-weight:600;font-variant-numeric:tabular-nums}
+.rel-nota{border:1px solid rgba(255,255,255,.07);border-left:2px solid var(--acento);border-radius:8px;padding:clamp(10px,1.8cqw,18px);background:rgba(255,255,255,.025)}
+.rel-nota span{display:block;color:var(--rotulo);font-size:clamp(.62rem,1.1cqw,.78rem);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.5em}
+.rel-nota p{margin:0;color:var(--texto);font-size:clamp(.74rem,1.4cqw,.98rem);line-height:1.45}
+@media (max-width:759px){
+  .tela-print{aspect-ratio:auto}
+  .rel-exemplo{font-size:.66rem}
+  .rel-kpis{grid-template-columns:1fr 1fr}
+  .rel-corpo{grid-template-columns:1fr}
+  .relatorio{mask-image:none;-webkit-mask-image:none}
+}
+@media (min-width:760px){.relatorio{mask-image:linear-gradient(180deg,#000 88%,transparent 100%);-webkit-mask-image:linear-gradient(180deg,#000 88%,transparent 100%)}}
+.rel-corpo{flex:0 0 auto;align-items:start}
+.rel-funil{justify-content:flex-start;gap:clamp(6px,1cqw,10px)}
+.rel-funil li::before{min-width:7.5em}
+.tela-print{aspect-ratio:auto}.rel{padding-bottom:clamp(20px,4cqw,44px)}
+
+/* ═══ Método ALCANCE: estrada em perspectiva com 4 marcos (11/11) ═══ */
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.metodo{isolation:isolate;overflow-x:clip}
+.luzes-metodo{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.luzes-metodo span{position:absolute;right:-10%;top:10%;width:70%;height:70%;
+  background:radial-gradient(closest-side,rgba(242,118,36,.30),rgba(193,60,10,.12) 55%,transparent)}
+.metodo-cab{display:grid;gap:1rem;margin-bottom:clamp(32px,5vh,56px)}
+.metodo-cab h2{max-width:22ch}
+.etapa-texto h3{font-size:clamp(1.25rem,2.2vw,1.6rem);letter-spacing:-.02em;line-height:1.15;margin:0 0 .4rem}
+.etapa-texto p{margin:0;color:var(--texto-secundario);font-size:1rem;line-height:1.5;text-wrap:pretty}
+.etapa-texto p::first-letter{text-transform:uppercase}
+
+/* marco: disco branco em pé sobre a estrada, com luz laranja no chão */
+.marco{position:relative;display:grid;justify-items:center;--d:calc(56px * var(--s,1))}
+.marco-disco{position:relative;z-index:2;width:var(--d);height:var(--d);border-radius:50%;display:grid;place-items:center;
+  background:var(--branco);color:var(--fundo);font-weight:700;font-size:calc(var(--d) * .38);letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+  box-shadow:inset 0 -3px 0 rgba(0,0,0,.18),0 10px 24px rgba(0,0,0,.45)}
+.marco-haste{order:2;width:2px;height:calc(var(--d) * .32);background:linear-gradient(#d9d9de,#6b6b72)}
+.marco-luz{position:absolute;z-index:0;left:50%;bottom:calc(var(--d) * -.14);width:calc(var(--d) * 2.6);height:calc(var(--d) * .7);transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(closest-side,rgba(242,118,36,.75),rgba(193,60,10,.3) 55%,transparent)}
+.marco-disco{order:1}
+.marco-luz{order:3}
+.metodo-relatorio{margin-top:clamp(40px,7vh,80px)}
+.metodo-relatorio .relatorio{perspective:none}
+.metodo-fecho{margin:clamp(32px,5vh,56px) 0 0;font-size:clamp(1.25rem,2.6vw,1.9rem);line-height:1.25;letter-spacing:-.02em;color:var(--texto-titulo);font-weight:500;max-width:30ch;text-wrap:balance}
+
+/* estados do movimento: só quando o JS anima (sem JS ou sem movimento, tudo aceso) */
+.metodo.anima .passo{--apagado:1}
+.metodo.anima .passo .marco-disco{transition:background-color .6s cubic-bezier(.22,1,.36,1),color .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+.metodo.anima .passo:not(.acesa) .marco-disco{background:#3a3a41;color:#8e8e95;transform:scale(.92)}
+.metodo.anima .passo .marco-luz,.metodo.anima .passo .etapa-texto{transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+.metodo.anima .passo:not(.acesa) .marco-luz{opacity:0}
+.metodo.anima .passo:not(.acesa) .etapa-texto{opacity:.28;transform:translateY(8px)}
+
+/* CELULAR e tablet: estrada vertical à esquerda */
+.estrada-larga{display:none}
+.estrada-palco{position:relative}
+.marcos{list-style:none;margin:0;padding:0;position:relative;display:grid;gap:clamp(36px,6vh,56px)}
+.passo{display:grid;grid-template-columns:64px 1fr;gap:16px;align-items:start;--s:.82}
+.passo .marco{grid-column:1}
+.estrada-alta{position:absolute;left:0;top:0;width:64px;height:100%;overflow:visible;pointer-events:none}
+.alta-borda{fill:none;stroke:rgba(242,118,36,.55);stroke-width:26;stroke-linecap:round}
+.alta-pista{fill:none;stroke:#26262c;stroke-width:23;stroke-linecap:round}
+.alta-faixa{fill:none;stroke:rgba(255,255,255,.32);stroke-width:1.5;stroke-dasharray:6 9}
+/* sem JS: uma linha reta no lugar da estrada */
+.marcos::before{content:'';position:absolute;left:31px;top:20px;bottom:20px;width:2px;background:var(--cartao-borda)}
+.estrada.desenhada .marcos::before{display:none}
+.etapa-texto{padding-top:calc(56px * var(--s) * .5 - .8rem)}
+
+/* COMPUTADOR: palco em perspectiva, marcos sobre a estrada */
+@media (min-width:960px){
+  .estrada{display:grid;place-items:center}
+  .estrada-palco{width:min(100%,calc((100svh - 150px) * 1200 / 700));aspect-ratio:1200/700;container-type:inline-size}
+  .estrada-larga{display:block;position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .estrada-alta,.marcos::before{display:none}
+  .estrada-borda{stroke:rgba(242,118,36,.7);stroke-width:1.6;vector-effect:non-scaling-stroke}
+  .estrada-faixa{stroke:rgba(255,255,255,.34);stroke-width:1.4;stroke-dasharray:10 14;vector-effect:non-scaling-stroke}
+  .marcos{position:absolute;inset:0;display:block}
+  .passo{position:absolute;left:var(--x);top:var(--y);display:block;width:0;height:0}
+  .passo .marco{position:absolute;left:0;bottom:0;transform:translateX(-50%);--d:calc(5.4cqw * var(--s))}
+  .etapa-texto{position:absolute;top:0;width:24cqw;padding:0;transform:translateY(-78%)}
+  .passo--d .etapa-texto{left:calc(4cqw * var(--s) + 1.6cqw)}
+  .passo--e .etapa-texto{right:calc(4cqw * var(--s) + 1.6cqw)}
+  .metodo.anima .passo:not(.acesa) .etapa-texto{transform:translateY(calc(-78% + 8px))}
+  .etapa-texto h3{font-size:clamp(1.15rem,1.9cqw,1.6rem)}
+  .etapa-texto p{font-size:clamp(.88rem,1.35cqw,1.02rem)}
+}
+@media (min-width:960px){
+  .passo .etapa-texto{width:22cqw}
+  .passo--d .etapa-texto{left:calc(4cqw * var(--s) + 3cqw)}
+  .passo--e .etapa-texto{right:calc(4cqw * var(--s) + 3cqw)}
+}
+
+/* ═══ Fundo de Manaus: Teatro Amazonas com vidro e reflexo laranja, preso na tela do topo até os serviços ═══
+   As seções da faixa ficam com fundo meio transparente para a cidade aparecer, bem suave. */
+.cidade-faixa{position:relative;isolation:isolate;background:var(--fundo)}
+.cidade{position:sticky;top:0;height:100vh;height:100svh;margin-bottom:-100vh;margin-bottom:-100svh;overflow:hidden;pointer-events:none;z-index:0}
+.cidade img{display:block;width:100%;height:auto;min-height:130vh;min-height:130svh;object-fit:cover;opacity:.42;
+  /* mais visível no meio, some nas bordas */
+  -webkit-mask-image:radial-gradient(120% 75% at 50% 50%,#000 35%,transparent 100%);mask-image:radial-gradient(120% 75% at 50% 50%,#000 35%,transparent 100%)}
+/* sem movimento ou sem JS: a foto fica parada mostrando o teatro */
+.cidade img{transform:translateY(-22%)}
+html.cidade-move .cidade img{transform:none}
+.cidade-faixa>section{position:relative;z-index:1}
+.cidade-faixa>.tarja{z-index:3}
+/* topo: as mesmas luzes, mas o preto do fundo vira véu para a cidade aparecer */
+.cidade-faixa .topo{background:
+  radial-gradient(70% 50% at 60% 78%,rgba(242,118,36,.5) 0%,rgba(193,60,10,.24) 38%,transparent 72%),
+  radial-gradient(120% 80% at 85% 10%,rgba(28,28,34,.72) 0%,rgba(13,13,15,.5) 60%)}
+@media (min-width:900px){.cidade-faixa .topo{background:
+  radial-gradient(46% 72% at 78% 52%,rgba(242,118,36,.55) 0%,rgba(193,60,10,.26) 36%,rgba(90,30,8,.1) 58%,transparent 76%),
+  linear-gradient(90deg,rgba(13,13,15,.78) 0%,rgba(13,13,15,.5) 55%,rgba(13,13,15,.35) 100%)}}
+/* Método: véu mais escuro para a estrada não competir com a cidade */
+.cidade-faixa .metodo{background:rgba(13,13,15,.62)}
+/* Serviços: painel translúcido */
+.cidade-faixa .secao-painel{background:rgba(27,27,32,.64)}
+.cidade-credito{position:relative;z-index:1;margin:0;padding:6px calc(var(--gutter) + var(--respiro)) 10px;text-align:right;font-size:.7rem;color:var(--rotulo);background:rgba(27,27,32,.64)}
+
+/* ═══ Rodada 12 (12/11/2026): selo grátis, Problema + escada, Quem somos, Dúvidas, Fechamento, Rodapé ═══ */
+
+/* blocos claros: do quase branco ao cinza, com um toque de luz laranja no canto (paleta do Gilson) */
+.tarja,.claro{background:
+  radial-gradient(55% 90% at 100% 0%,rgba(242,118,36,.16) 0%,rgba(242,118,36,0) 70%),
+  linear-gradient(180deg,#F1F1F3 0%,#DCDCE1 100%)}
+.claro{position:relative;z-index:3;overflow:hidden;isolation:isolate;color:var(--bloco-claro-texto);border-top-color:#C9C9CF}
+.claro .rotulo{color:#6E6E76}
+.claro h2,.claro h3{color:var(--fundo)}
+.claro p{color:#3A3A42}
+
+/* selo "100% gratuito": o degradê laranja da paleta, único laranja sólido do site */
+.selo-gratis{display:inline-block;margin:0 0 1rem;padding:.4em .75em;border-radius:6px;
+  font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;line-height:1.2;
+  color:#fff!important;background:linear-gradient(135deg,#F27624 0%,#C13C0A 100%)}
+.tarja .tarja-texto p.selo-gratis{margin:0 0 1rem;font-size:.78rem;font-weight:600;letter-spacing:.08em;line-height:1.2}
+
+/* ─── Problema + escada ─── */
+.problema{overflow-x:clip}
+.cidade-faixa .problema{background:rgba(13,13,15,.62)}
+.problema h2{font-size:clamp(2.4rem,6.4vw,4.6rem);line-height:1;max-width:13ch}
+.problema-cab{display:grid;gap:1rem}
+.problema-corpo{margin-top:clamp(28px,4vh,40px)}
+.dores{list-style:none;margin:28px 0 0;padding:0;border-top:1px solid rgba(255,255,255,.12)}
+.dores li{padding:16px 2px;border-bottom:1px solid rgba(255,255,255,.12);font-size:clamp(1.05rem,1.6vw,1.2rem);color:var(--texto-titulo);line-height:1.4}
+.virada{margin-top:28px;font-size:clamp(1.2rem,2.2vw,1.55rem);line-height:1.3;letter-spacing:-.015em;color:var(--texto-titulo);max-width:30ch}
+@media (min-width:960px){
+  .problema-grade{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:clamp(48px,6vw,96px);align-items:start}
+  .problema-corpo{margin-top:2.1rem}
+}
+.papel{margin-top:clamp(88px,14vh,160px)}
+.papel-cab{display:grid;gap:1rem;max-width:820px}
+.papel-cab h2{font-size:clamp(2rem,4.6vw,3.6rem);max-width:20ch}
+.papel-nota{margin-top:clamp(28px,4vh,40px);color:var(--texto-secundario);max-width:48ch}
+.papel-fecho{margin-top:.6rem;font-size:clamp(1.25rem,2.4vw,1.8rem);font-weight:500;letter-spacing:-.02em;line-height:1.25;color:var(--texto-titulo)}
+
+/* escada: blocos grafite que sobem; cada degrau acende em branco com a luz laranja no chão */
+
+/* estado apagado (só quando há animação) */
+
+/* ─── Quem somos ─── */
+.luzes.luzes-claro span:nth-child(1){top:auto;left:auto;opacity:1;position:absolute;right:-10vw;bottom:-20vw;width:50vw;height:50vw;max-width:700px;max-height:700px;border-radius:50%;filter:blur(40px);
+  background:radial-gradient(closest-side,rgba(242,118,36,.14),transparent)}
+.quem-cab{display:grid;gap:1rem;margin-bottom:clamp(40px,6vh,72px)}
+.quem-cab h2{font-size:clamp(2.4rem,6vw,4.4rem);line-height:1;max-width:15ch}
+.socio{display:grid;gap:24px}
+.socio+.socio{margin-top:clamp(48px,8vh,96px)}
+.socio-foto{position:relative;aspect-ratio:4/5;border-radius:var(--raio-g);overflow:hidden;
+  background:linear-gradient(160deg,#D2D2D8 0%,#B4B4BB 100%);border:1px dashed rgba(13,13,15,.22);display:flex;align-items:flex-end;padding:16px}
+.socio-foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.vaga-foto{font-size:.75rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#4A4A52}
+.socio-texto h3{font-size:clamp(1.7rem,3.2vw,2.5rem);line-height:1.05;letter-spacing:-.035em}
+.socio-texto p{margin-top:1rem;font-size:clamp(1.05rem,1.5vw,1.2rem);line-height:1.55;max-width:44ch}
+@media (min-width:860px){
+  .socio{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(40px,6vw,96px);align-items:center}
+  .socio-foto{max-height:640px;width:100%}
+  .socio--inverso .socio-foto{order:2}
+}
+.numeros{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,3vw,40px);margin:clamp(56px,9vh,104px) 0 0;
+  padding-top:24px;border-top:1px solid rgba(13,13,15,.14)}
+.numeros div{display:flex;flex-direction:column-reverse;justify-content:flex-end;gap:6px}
+.numeros dd{margin:0;font-size:clamp(3rem,9vw,6rem);font-weight:600;line-height:.9;letter-spacing:-.05em;color:var(--fundo);font-variant-numeric:tabular-nums}
+.numeros dt{font-size:clamp(.85rem,1.3vw,1rem);line-height:1.35;color:#4A4A52;max-width:22ch}
+
+/* ─── Dúvidas (mesma lista que abre e fecha dos serviços) ─── */
+.duvidas .item-servico summary{font-size:clamp(1.1rem,2vw,1.4rem)}
+@media (min-width:960px){
+  #duvidas .wrap{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);column-gap:clamp(48px,6vw,96px);align-items:start}
+}
+
+/* ─── Fechamento: luz laranja nascendo de baixo ─── */
+.fechamento{overflow:hidden;isolation:isolate;text-align:center}
+.fechamento .wrap{display:flex;flex-direction:column;align-items:center;gap:1.1rem}
+.fechamento h2{font-size:clamp(2.4rem,6.2vw,4.8rem);line-height:1;max-width:17ch}
+.fechamento .lead{color:var(--texto-secundario);max-width:44ch}
+.luzes.luzes-fecho span:nth-child(1){top:auto;right:auto;max-width:none;position:absolute;left:50%;bottom:-26vw;width:110vw;height:60vw;max-height:720px;transform:translateX(-50%);border-radius:50%;filter:blur(30px);opacity:1;
+  background:radial-gradient(closest-side,rgba(242,118,36,.62) 0%,rgba(193,60,10,.3) 45%,transparent 100%)}
+.fecho-acoes{display:flex;flex-direction:column;gap:12px;width:100%;margin-top:1rem}
+.fecho-acoes .btn{min-height:56px}
+@media (min-width:640px){.fecho-acoes{flex-direction:row;justify-content:center;width:auto}}
+
+/* ─── Rodapé ─── */
+.rodape{border-top:1px solid var(--linha);padding:48px 0 calc(96px + env(safe-area-inset-bottom));font-size:.92rem;color:var(--texto-secundario)}
+.rodape .wrap{display:grid;gap:28px}
+.rodape p{color:inherit}
+.rodape-marca p{margin-top:.6rem}
+.rodape-dados{font-style:normal;display:grid;gap:.3rem}
+.rodape-links{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
+.rodape-links a{color:var(--texto);display:inline-block;min-height:28px}
+.rodape .rodape-copia{color:var(--rotulo);font-size:.82rem}
+@media (min-width:860px){
+  .rodape{padding-bottom:48px}
+  .rodape .wrap{grid-template-columns:1.1fr 1.2fr 1.2fr .8fr;align-items:start}
+  .rodape-copia{text-align:right}
+}
+
+/* ─── Botão do Check-up fixo no celular ─── */
+.fixo-checkup{position:fixed;left:16px;right:16px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:60;min-height:54px;
+  box-shadow:0 10px 30px rgba(0,0,0,.45);transform:translateY(160%);transition:transform .36s var(--ease-entra)}
+.fixo-checkup.visivel{transform:none}
+@media (min-width:760px){.fixo-checkup{display:none}}
+@media (prefers-reduced-motion:reduce){.fixo-checkup{transition:none}}
+
+/* ═══ Rodada 13 (12/11/2026): WhatsApp verde, barra flutuante, barra de desejo ═══ */
+
+/* tudo que é WhatsApp fica no verde do WhatsApp (texto escuro para ter contraste) */
+:root{--zap:#25D366;--zap-escuro:#1EBE5A;--zap-texto:#06301A}
+.btn-zap{background:var(--zap);color:var(--zap-texto);border-color:transparent}
+@media (hover:hover) and (pointer:fine){.btn-zap:hover{background:var(--zap-escuro)}}
+.link-zap{color:var(--zap)!important}
+
+/* barra do topo flutuante: um vidro discreto que fica sempre no alto, com a logo e o WhatsApp à mão */
+.nav{background:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  padding:10px var(--gutter) 0;pointer-events:none}
+.nav .wrap{pointer-events:auto;height:56px;max-width:var(--largura);margin:0 auto;padding:0 8px 0 18px!important;border-radius:12px;
+  background:rgba(20,20,24,.72);border:1px solid rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 30px rgba(0,0,0,.35);
+  backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);gap:10px}
+.nav-links{margin-left:auto;margin-right:12px}
+.nav .btn{min-height:40px}
+.nav-zap{display:inline-flex;align-items:center;justify-content:center;width:44px;height:40px;flex:none;border-radius:8px;
+  background:var(--zap);color:var(--zap-texto);transition:transform var(--m-out) var(--ease),background-color var(--m-out) var(--ease)}
+.nav-zap svg{width:22px;height:22px}
+@media (hover:hover) and (pointer:fine){.nav-zap:hover{transform:translateY(-1px);background:var(--zap-escuro)}}
+.nav-zap:active{transform:translateY(1px) scale(.97)}
+.nav-logo{margin-right:auto}
+@media (min-width:960px){.nav-logo{margin-right:0}}
+@media (max-width:420px){.nav .btn{padding:0 .8rem;font-size:.88rem}}
+
+/* ─── Jornada do cliente pronto ─── */
+.jornada{margin-top:clamp(32px,5vh,56px)}
+.jornada-palco{display:flex;flex-direction:column;align-items:center;gap:clamp(16px,3vh,28px);max-width:760px;margin:0 auto}
+
+.jornada-rotulo{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-height:3.4em}
+.jornada-n{font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--rotulo)}
+.jornada-t{font-size:clamp(1.35rem,3.4vw,2rem);font-weight:600;letter-spacing:-.025em;line-height:1.15;color:var(--texto-titulo)}
+
+.jornada[data-etapa="0"]{--cheio:20%}
+.jornada[data-etapa="1"]{--cheio:40%}
+.jornada[data-etapa="2"]{--cheio:60%}
+.jornada[data-etapa="3"]{--cheio:80%}
+.jornada[data-etapa="4"]{--cheio:100%}
+
+
+
+/* lista das etapas: aparece sem movimento (e é o texto para leitor de tela) */
+.jornada-lista{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px;width:100%;max-width:560px}
+.jornada-lista li{display:flex;gap:12px;align-items:center;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:var(--texto-titulo);background:rgba(255,255,255,.03)}
+.jornada-lista li span{font-weight:600;color:var(--rotulo);font-variant-numeric:tabular-nums}
+.jornada-lista li:last-child{border-color:rgba(242,118,36,.5)}
+/* com movimento: a lista vira só texto para leitor de tela, e o palco ocupa a tela parada */
+.jornada.anima .jornada-lista{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.jornada.anima .jornada-palco{min-height:calc(100svh - 96px);justify-content:center}
+
+
+
+
+
+
+
+
+/* ─── Barra de desejo (pedido do Gilson 12/11: só a barra, do branco ao quente, com as etapas anunciadas) ─── */
+.jornada-palco{max-width:880px}
+.jornada-rotulo{gap:10px;min-height:0}
+.jornada-n{font-size:.8rem}
+.jornada-t{font-size:clamp(2rem,6vw,4rem);line-height:1.02;letter-spacing:-.04em;max-width:16ch;text-wrap:balance}
+.desejo{width:100%;margin-top:clamp(20px,4vh,40px)}
+.desejo-cab{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;
+  font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--rotulo)}
+.desejo-pct{font-size:clamp(1.1rem,2.4vw,1.5rem);letter-spacing:-.02em;color:var(--texto-titulo);font-variant-numeric:tabular-nums}
+/* trilho com 4 marcas que dividem as 5 etapas */
+.desejo-trilho{position:relative;height:clamp(18px,2.6vw,26px);border-radius:8px;overflow:hidden;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+/* o degradê ocupa o trilho inteiro e vai sendo revelado: quanto mais cheio, mais quente */
+.desejo-cheio{position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(90deg,#F3F3F5 0%,#E9D6C6 22%,#F0A46A 48%,#F27624 72%,#C13C0A 100%);
+  clip-path:inset(0 calc(100% - var(--cheio,100%)) 0 0 round 7px);transition:clip-path .8s var(--ease-entra)}
+.desejo-marca{position:absolute;top:0;bottom:0;left:var(--m);width:2px;margin-left:-1px;background:var(--fundo);opacity:.85}
+/* as 5 etapas embaixo da barra (no computador); a atual em destaque, as já passadas em branco */
+.jornada.anima .jornada-lista{position:static;width:100%;max-width:none;height:auto;overflow:visible;clip:auto;white-space:normal;
+  grid-template-columns:repeat(5,minmax(0,1fr));gap:0;margin-top:14px}
+.jornada.anima .jornada-lista li{display:block;padding:0 6px 0 0;border:0;background:none;border-radius:0;
+  font-size:clamp(.78rem,1.1vw,.92rem);line-height:1.3;color:var(--rotulo);transition:color .5s var(--ease-entra)}
+.jornada.anima .jornada-lista li span{display:block;margin-bottom:2px}
+.jornada[data-etapa="0"] .jornada-lista li:nth-child(-n+1),
+.jornada[data-etapa="1"] .jornada-lista li:nth-child(-n+2),
+.jornada[data-etapa="2"] .jornada-lista li:nth-child(-n+3),
+.jornada[data-etapa="3"] .jornada-lista li:nth-child(-n+4),
+.jornada[data-etapa="4"] .jornada-lista li{color:var(--texto-titulo)}
+@media (max-width:639px){
+  .jornada.anima .jornada-lista{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+}
+.jornada-t{transition:opacity .35s var(--ease-entra)}
+@media (prefers-reduced-motion:reduce){.desejo-cheio{transition:none}}
+
+/* Quem somos com as fotos reais e a história (12/11/2026) */
+.quem-historia{margin-top:.6rem;font-size:clamp(1.08rem,1.6vw,1.28rem);line-height:1.6;max-width:62ch}
+.socio-foto{border:0;padding:0;background:#C9C9CF}
+.socio-origem{margin-top:.5rem!important;font-size:.75rem!important;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#6E6E76!important}
+
+/* ─── Barra de desejo junto do texto (pedido do Gilson 12/11: não ocupa a tela sozinha; evolui conforme o texto passa) ─── */
+.problema-grade{display:grid}
+.problema-texto>*+*{margin-top:clamp(20px,3vh,28px)}
+.problema-texto .papel-cab{margin-top:clamp(80px,12vh,140px)}
+.problema-texto .papel-fecho{margin-top:.6rem}
+.problema h2{font-size:clamp(2.2rem,5.6vw,3.8rem);max-width:14ch}
+.problema .papel-cab h2{font-size:clamp(1.9rem,4.2vw,3rem);max-width:20ch}
+/* celular: a barra fica presa no alto, compacta, enquanto o texto passa por baixo */
+.jornada{position:sticky;top:76px;z-index:5;margin:0 0 28px}
+.jornada-palco{max-width:none;align-items:stretch;gap:10px;padding:14px 16px;border-radius:12px;
+  background:rgba(20,20,24,.86);border:1px solid rgba(255,255,255,.09);
+  backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%)}
+.jornada.anima .jornada-palco{min-height:0}
+.jornada-rotulo{flex-direction:row;align-items:baseline;justify-content:space-between;text-align:left;gap:12px;min-height:0}
+.jornada-n{font-size:.68rem;white-space:nowrap;order:2}
+.jornada-t{font-size:1.08rem;letter-spacing:-.015em;line-height:1.2;max-width:none}
+.desejo{margin-top:0}
+.desejo-cab{margin-bottom:8px;font-size:.66rem}
+.desejo-pct{font-size:.95rem}
+.desejo-trilho{height:14px}
+@media (max-width:959px){
+  .jornada.anima .jornada-lista{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+}
+/* computador: a barra fica ao lado do texto, presa enquanto ele passa */
+@media (min-width:960px){
+  .problema-grade{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);column-gap:clamp(48px,6vw,96px);align-items:start}
+  .problema-texto{grid-column:1;grid-row:1}
+  .jornada{grid-column:2;grid-row:1;top:128px;margin:0}
+  .jornada-palco{padding:28px;gap:20px}
+  .jornada-rotulo{flex-direction:column;align-items:flex-start;gap:8px}
+  .jornada-n{order:0;font-size:.75rem}
+  .jornada-t{font-size:clamp(1.6rem,2.6vw,2.3rem);letter-spacing:-.035em;line-height:1.05}
+  .desejo-cab{font-size:.72rem}
+  .desejo-pct{font-size:1.2rem}
+  .desejo-trilho{height:20px}
+  .jornada.anima .jornada-lista{grid-template-columns:1fr;gap:8px;margin-top:4px}
+  .jornada.anima .jornada-lista li{display:flex;gap:12px;padding:0;font-size:.95rem}
+  .jornada.anima .jornada-lista li span{display:inline;margin:0;min-width:1ch}
+}
+
+/* ═══ Página /servicos (12/11/2026) ═══ */
+.pagina-topo{position:relative;overflow:hidden;isolation:isolate;padding:clamp(72px,14vh,150px) 0 clamp(56px,10vh,110px);
+  background:radial-gradient(120% 80% at 85% 10%,var(--fundo-luz) 0%,var(--fundo) 60%)}
+.pagina-topo .wrap{display:flex;flex-direction:column;align-items:flex-start;gap:1.1rem}
+.pagina-topo h1{max-width:13ch}
+.pagina-topo .filete{margin:.6rem 0 .4rem}
+.pagina-topo .lead{font-size:clamp(1.08rem,1.7vw,1.3rem);max-width:46ch;color:var(--texto)}
+.pagina-topo .btn{margin-top:.8rem;min-height:56px}
+.pagina-topo .luzes-fecho span{bottom:-34vw!important}
+
+.catalogo{padding-top:clamp(48px,8vh,96px)}
+.catalogo-grade{display:grid;gap:32px}
+/* índice: no celular, uma lista de atalhos; no computador, fixo ao lado */
+.indice{display:grid;gap:10px;padding:18px;border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(255,255,255,.025)}
+.indice ol{list-style:none;margin:0 0 8px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.indice a{display:inline-flex;align-items:center;min-height:40px;padding:0 12px;border:1px solid rgba(255,255,255,.12);border-radius:8px;
+  color:var(--texto);text-decoration:none;font-size:.92rem;transition:background-color var(--m-out) var(--ease),color var(--m-out) var(--ease)}
+@media (hover:hover) and (pointer:fine){.indice a:hover{background:rgba(255,255,255,.06);color:var(--texto-titulo)}}
+.indice a.atual{background:var(--branco);color:var(--fundo);border-color:var(--branco)}
+@media (min-width:1024px){
+  .catalogo-grade{grid-template-columns:260px minmax(0,1fr);column-gap:clamp(40px,5vw,80px);align-items:start}
+  .indice{position:sticky;top:100px;padding:0;border:0;background:none;gap:12px}
+  .indice ol{display:grid;gap:2px;margin-bottom:18px}
+  .indice a{min-height:38px;padding:0 0 0 14px;border:0;border-left:2px solid rgba(255,255,255,.1);border-radius:0;background:none!important;color:var(--texto-secundario)}
+  .indice a.atual{color:var(--texto-titulo);border-left-color:var(--branco)}
+}
+
+/* cada produto */
+.produto{scroll-margin-top:96px;padding:clamp(32px,5vh,48px) 0;border-top:1px solid rgba(255,255,255,.12)}
+.produtos>.produto:first-child{border-top:0;padding-top:0}
+.produto-cab{display:grid;gap:.5rem}
+.produto-n{font-size:.78rem;font-weight:600;letter-spacing:.16em;color:var(--rotulo);font-variant-numeric:tabular-nums}
+.produto h2{font-size:clamp(1.9rem,4.4vw,3rem);max-width:none}
+.produto h2 .selo{font-size:.62rem;vertical-align:.45em;margin-left:.4rem}
+.produto-preco{font-size:.98rem;color:var(--texto-secundario)}
+.produto-preco strong{color:var(--texto-titulo);font-weight:600}
+.produto-frase{margin-top:1rem;font-size:clamp(1.1rem,1.8vw,1.35rem);line-height:1.45;color:var(--texto-titulo);max-width:40ch}
+.produto-itens{list-style:none;margin:1.2rem 0 0;padding:0;display:grid;gap:0;max-width:60ch}
+.produto-itens li{position:relative;padding:12px 0 12px 22px;border-bottom:1px solid rgba(255,255,255,.08);color:var(--texto);line-height:1.5}
+.produto-itens li::before{content:'';position:absolute;left:2px;top:22px;width:10px;height:1.5px;background:var(--texto-secundario)}
+.selo-bonus{display:inline-block;margin-right:.35rem;padding:.15em .5em;border-radius:6px;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:#fff;background:linear-gradient(135deg,#F27624,#C13C0A);vertical-align:.1em}
+.produto-acoes{margin-top:1.4rem;display:flex;flex-wrap:wrap;gap:12px}
+.produto-acoes .btn{min-height:52px}
+/* grupo "A gente orienta, você executa": bloco claro acinzentado */
+.produtos-orienta{margin-top:clamp(40px,6vh,72px);padding:clamp(24px,4vw,48px);border-radius:var(--raio-g)}
+.produtos-orienta .produto{border-top-color:rgba(13,13,15,.14)}
+.produtos-orienta .rotulo+.produto{border-top:0;padding-top:12px}
+.produtos-orienta .produto-n,.produtos-orienta .produto-preco{color:#6E6E76}
+.produtos-orienta .produto-preco strong,.produtos-orienta .produto-frase{color:var(--fundo)}
+.produtos-orienta .produto-itens li{color:#3A3A42;border-bottom-color:rgba(13,13,15,.1)}
+.produtos-orienta .produto-itens li::before{background:#8E8E95}
+
+/* ═══ "+" que vira "×" ao abrir (pedido do Gilson 12/11): listas da inicial e serviços da /servicos ═══ */
+.item-seta,.item-mais{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;
+  color:var(--texto-secundario);transition:transform var(--m-slide) var(--ease-entra),color var(--m-slide) var(--ease)}
+.item-servico[open] .item-seta,.produto[open] .item-mais{transform:rotate(45deg);color:var(--texto-titulo)}
+
+/* /servicos: cada serviço é uma linha que abre e fecha */
+.produto{padding:0;border-top:1px solid rgba(255,255,255,.12)}
+.produtos>.produto:first-child{border-top:1px solid rgba(255,255,255,.12);padding-top:0}
+.produtos>.produto:last-of-type{border-bottom:1px solid rgba(255,255,255,.12)}
+.produto-cab{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;
+  column-gap:clamp(12px,2vw,24px);row-gap:4px;padding:clamp(18px,3vh,28px) 4px;min-height:72px}
+.produto-cab::-webkit-details-marker{display:none}
+.produto-n{grid-row:1/3;align-self:start;padding-top:.55em}
+.produto h2{grid-column:2;font-size:clamp(1.45rem,3.2vw,2.3rem);transition:transform var(--m-slide) var(--ease-entra)}
+.produto-preco{grid-column:2;font-size:.92rem}
+.item-mais{grid-column:3;grid-row:1/3;width:28px;height:28px}
+@media (hover:hover) and (pointer:fine){
+  .produto-cab:hover h2{transform:translateX(6px)}
+  .produto-cab:hover .item-mais{color:var(--texto-titulo)}
+}
+.produto-corpo{padding:0 4px clamp(28px,4vh,40px) calc(4px + 2.2em)}
+.produto-corpo .produto-frase{margin-top:0}
+@media (max-width:639px){.produto-corpo{padding-left:4px}.produto-n{display:none}.produto-cab{grid-template-columns:minmax(0,1fr) auto}.produto h2,.produto-preco{grid-column:1}.item-mais{grid-column:2}}
+@supports (interpolate-size:allow-keywords){
+  .produto{interpolate-size:allow-keywords}
+  .produto::details-content{height:0;overflow:clip;transition:height 360ms var(--ease-entra),content-visibility 360ms allow-discrete}
+  .produto[open]::details-content{height:auto}
+}
+@media (prefers-reduced-motion:reduce){.produto::details-content{transition:none}}
+.produtos-orienta .produto,.produtos-orienta .produto:last-of-type{border-color:rgba(13,13,15,.14)}
+.produtos-orienta .item-mais{color:#6E6E76}
+.produtos-orienta .produto[open] .item-mais,.produtos-orienta .produto-cab:hover .item-mais{color:var(--fundo)}
+.produtos-orienta .rotulo{margin-bottom:6px}
+
+/* ═══ Quebra visual (pedido do Gilson 12/11): foto de Manaus no começo (topo, faixa, problema) e no final (dúvidas, fechamento);
+       no meio, fundo sólido: Serviços claro, Método escuro, Quem somos claro ═══ */
+.cidade-faixa .duvidas{background:rgba(13,13,15,.64)}
+.cidade-faixa .fechamento{background:rgba(13,13,15,.5)}
+.cidade-faixa+.rodape,.rodape{position:relative;z-index:1;background:var(--fundo)}
+.metodo{background:var(--fundo)}
+
+/* Serviços em bloco claro acinzentado */
+#servicos.claro-servicos{overflow:clip}
+.claro-servicos .luzes-servicos{display:none}
+.claro-servicos .lista-cab h2{color:var(--fundo)}
+.claro-servicos .lista-cab .lead{color:#4A4A52}
+.claro-servicos .lista-servicos{border-top-color:rgba(13,13,15,.16)}
+.claro-servicos .item-servico{border-bottom-color:rgba(13,13,15,.16)}
+.claro-servicos .item-servico summary{color:var(--fundo)}
+.claro-servicos .item-seta{color:#6E6E76}
+.claro-servicos .item-servico[open] .item-seta,.claro-servicos .item-servico summary:hover .item-seta{color:var(--fundo)}
+.claro-servicos .item-corpo p{color:#3A3A42}
+.claro-servicos .link{color:var(--fundo)}
+.claro-servicos .lista-grupo{color:#6E6E76;border-bottom-color:rgba(13,13,15,.16)}
+.claro-servicos .selo{background:var(--fundo);color:#fff}
+.claro-servicos .nota{background:#fff;color:#3A3A42;border-left-color:#F27624}
+.claro-servicos .nota em{color:var(--fundo)}
+.claro-servicos .nota .link{color:var(--fundo)}
+#servicos.claro-servicos::after{opacity:.5}
