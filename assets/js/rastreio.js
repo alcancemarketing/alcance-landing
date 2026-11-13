@@ -33,7 +33,10 @@
   var agora = { quando: Date.now(), referrer: classifica(document.referrer) };
   PARAMS.forEach(function (p) { var v = url.get(p); if (v) agora[p] = v.slice(0, 200); });
   var origem = le();
-  if (!origem) { origem = agora; guarda(origem); } // primeiro toque: só grava se não houver origem válida
+  // Origem de anúncio (utm_source, fbclid ou gclid na URL) substitui a guardada e renova os 30 dias.
+  // Sem nenhum dos três, a origem guardada continua valendo (e, sem nada guardado, grava a atual).
+  var trazOrigem = !!(agora.utm_source || agora.fbclid || agora.gclid);
+  if (trazOrigem || !origem) { origem = agora; guarda(origem); }
 
   var temUtm = !!origem.utm_source;
   var pago = !!(origem.fbclid || origem.gclid) || /^(pago|cpc|paid|ppc|cpm|paid_?social|ads?)$/i.test(origem.utm_medium || '');
