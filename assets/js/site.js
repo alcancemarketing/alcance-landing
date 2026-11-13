@@ -234,15 +234,7 @@
     [].forEach.call(document.querySelectorAll('.produto[id]'), function (p) { io.observe(p); });
   })();
 
-  /* ─── Eventos no GA4: clique no Check-up e no WhatsApp, com a seção ─── */
-  document.addEventListener('click', function (e) {
-    var a = e.target.closest('[data-evento]');
-    if (!a || typeof window.gtag !== 'function') return;
-    window.gtag('event', a.getAttribute('data-evento'), {
-      secao: a.getAttribute('data-secao') || 'desconhecida',
-      link_url: a.href
-    });
-  });
+  /* (Eventos do GA4 e do Meta Pixel: ver assets/js/rastreio.js) */
 
   /* ─── Entrada do topo: tira a classe depois que termina ─── */
   if (!semMovimento) {

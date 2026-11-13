@@ -1,0 +1,152 @@
+/* Aviso de cookies e carregamento condicional de Meta Pixel e Google Analytics 4 (LGPD).
+   Veio do servidor (commit 994ab18) e foi ajustado ao visual do site novo; eventos em /assets/js/rastreio.js. */
+(function () {
+  var PIXEL = '1788250782417350';
+  var GA = 'G-QRW158WZFK';
+  var KEY = 'alcance_cookie_consent';
+  var VERSION = 1;
+  var MAX_AGE = 365 * 24 * 60 * 60 * 1000;
+  var loaded = false;
+
+  function read() {
+    try {
+      var o = JSON.parse(localStorage.getItem(KEY));
+      if (o && o.v === VERSION && typeof o.analytics === 'boolean' && (Date.now() - o.ts) < MAX_AGE) return o;
+    } catch (e) {}
+    return null;
+  }
+
+  function write(analytics) {
+    try { localStorage.setItem(KEY, JSON.stringify({ v: VERSION, analytics: analytics, ts: Date.now() })); } catch (e) {}
+  }
+
+  function loadTracking() {
+    if (loaded) return;
+    loaded = true;
+
+    !function (f, b, e, v, n, t, s) {
+      if (f.fbq) return;
+      n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+      if (!f._fbq) f._fbq = n;
+      n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = [];
+      t = b.createElement(e); t.async = !0; t.src = v;
+      s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+    }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', PIXEL);
+    fbq('track', 'PageView');
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    var g = document.createElement('script');
+    g.async = true;
+    g.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA;
+    document.head.appendChild(g);
+    gtag('js', new Date());
+    gtag('config', GA);
+  }
+
+  function clearCookies() {
+    var host = location.hostname;
+    var parts = host.split('.');
+    var domains = [host, '.' + host];
+    if (parts.length > 2) domains.push('.' + parts.slice(-2).join('.'));
+    document.cookie.split(';').forEach(function (c) {
+      var name = c.split('=')[0].trim();
+      if (/^(_ga|_gid|_gat|_fbp|_fbc)/.test(name)) {
+        var base = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+        document.cookie = base;
+        domains.forEach(function (d) { document.cookie = base + '; domain=' + d; });
+      }
+    });
+  }
+
+  // Eventos (Contact, Lead uma vez por visita, GA4) ficam em /assets/js/rastreio.js.
+  // trackLead fica só por compatibilidade com páginas antigas.
+  window.trackLead = function (origem) {
+    if (window.alcanceLead) window.alcanceLead(origem || 'site');
+  };
+
+  var css = '' +
+    '.ac-cookie,.ac-cookie *{box-sizing:border-box}' +
+    '.ac-cookie{position:fixed;left:16px;bottom:16px;z-index:2147483000;max-width:420px;width:calc(100% - 32px);' +
+    'background:rgba(27,27,32,.97);color:#D6D6DB;border:1px solid #33333B;border-radius:12px;padding:20px;' +
+    'font:400 14px/1.55 "Outfit",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 16px 40px rgba(0,0,0,.5)}' +
+    '.ac-cookie[hidden]{display:none!important}' +
+    '.ac-cookie h2{font:600 16px/1.25 "Outfit",system-ui,sans-serif;letter-spacing:-.01em;margin:0 0 8px;color:#fff;border:0;padding:0}' +
+    '.ac-cookie p{margin:0 0 16px;color:#A8A8B0}' +
+    '.ac-cookie a{color:#fff;text-decoration:underline;text-underline-offset:3px}' +
+    '.ac-cookie .ac-actions{display:flex;gap:10px}' +
+    '.ac-cookie button{flex:1 1 0;min-height:44px;padding:10px 14px;border-radius:8px;cursor:pointer;' +
+    'font:600 14px/1 "Outfit",system-ui,sans-serif;border:1px solid #33333B;transition:background-color .12s}' +
+    '.ac-cookie .ac-refuse{background:transparent;color:#fff}' +
+    '.ac-cookie .ac-refuse:hover{background:#26262E}' +
+    '.ac-cookie .ac-accept{background:#fff;color:#0D0D0F;border-color:#fff}' +
+    '.ac-cookie .ac-accept:hover{background:#E4E4E8}' +
+    '.ac-cookie button:focus-visible{outline:2px solid #fff;outline-offset:2px}' +
+    /* a escolha é reaberta pelo link "Preferências de cookies" do rodapé; o botão flutuante não aparece
+       (no celular ele brigaria com o botão fixo do Check-up) */
+    '.ac-pill{display:none!important}' +
+    '@media(max-width:480px){.ac-cookie{left:8px;right:8px;bottom:8px;width:auto;max-width:none;padding:16px}}';
+
+  var box, pill;
+
+  function showBanner() { pill.hidden = true; box.hidden = false; var b = box.querySelector('.ac-accept'); if (b) b.focus(); }
+  function hideBanner() { box.hidden = true; pill.hidden = false; }
+
+  function decide(analytics) {
+    var wasLoaded = loaded;
+    write(analytics);
+    hideBanner();
+    if (analytics) {
+      loadTracking();
+    } else {
+      clearCookies();
+      if (wasLoaded) location.reload();
+    }
+  }
+
+  function init() {
+    var st = document.createElement('style');
+    st.appendChild(document.createTextNode(css));
+    document.head.appendChild(st);
+
+    box = document.createElement('div');
+    box.className = 'ac-cookie';
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-label', 'Aviso de cookies');
+    box.hidden = true;
+    box.innerHTML =
+      '<h2>Sua privacidade</h2>' +
+      '<p>Usamos o Google Analytics e o Pixel da Meta para medir o desempenho do site e de nossos anúncios. ' +
+      'Eles só são ativados se você aceitar, e você pode mudar de ideia quando quiser. ' +
+      'Saiba mais na <a href="/privacidade.html">Política de Privacidade</a>.</p>' +
+      '<div class="ac-actions">' +
+      '<button type="button" class="ac-refuse">Recusar</button>' +
+      '<button type="button" class="ac-accept">Aceitar</button>' +
+      '</div>';
+    document.body.appendChild(box);
+
+    pill = document.createElement('button');
+    pill.type = 'button';
+    pill.className = 'ac-pill';
+    pill.textContent = 'Preferências de cookies';
+    pill.hidden = true;
+    document.body.appendChild(pill);
+
+    box.querySelector('.ac-accept').addEventListener('click', function () { decide(true); });
+    box.querySelector('.ac-refuse').addEventListener('click', function () { decide(false); });
+    pill.addEventListener('click', showBanner);
+    window.acOpenConsent = showBanner;
+
+    var c = read();
+    if (c) {
+      if (c.analytics) loadTracking();
+      pill.hidden = false;
+    } else {
+      box.hidden = false;
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();

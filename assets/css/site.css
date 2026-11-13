@@ -856,3 +856,6 @@ html.cidade-move .cidade img{transform:none}
 .claro-servicos .nota em{color:var(--fundo)}
 .claro-servicos .nota .link{color:var(--fundo)}
 #servicos.claro-servicos::after{opacity:.5}
+
+/* botão "Preferências de cookies" do rodapé com cara de link */
+.link-botao{border:0;background:none;padding:0 0 3px;font:inherit;cursor:pointer;text-align:left}
