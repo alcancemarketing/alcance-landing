@@ -60,11 +60,9 @@
     });
   }
 
-  // Eventos (Contact, Lead uma vez por visita, GA4) ficam em /assets/js/rastreio.js.
-  // trackLead fica só por compatibilidade com páginas antigas.
-  window.trackLead = function (origem) {
-    if (window.alcanceLead) window.alcanceLead(origem || 'site');
-  };
+  // Eventos (Contact, CheckupClique, GA4) ficam em /assets/js/rastreio.js.
+  // trackLead não faz mais nada: o Lead agora só acontece no envio final do Check-up (app.alcancemkt.com).
+  window.trackLead = function () {};
 
   var css = '' +
     '.ac-cookie,.ac-cookie *{box-sizing:border-box}' +

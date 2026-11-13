@@ -78,22 +78,24 @@
   function ga(nome, dados) { if (typeof window.gtag === 'function') window.gtag('event', nome, dados); }
   function px(nome, dados) { if (typeof window.fbq === 'function') window.fbq('track', nome, dados); }
 
-  // Lead: no máximo um por visita (sessão do navegador), no site e no Check-up
-  window.alcanceLead = function (secao) {
-    try { if (sessionStorage.getItem('alcance_lead')) return false; sessionStorage.setItem('alcance_lead', secao); } catch (e) {}
-    px('Lead', { content_name: secao });
-    ga('generate_lead', { pagina: pagina, secao: secao, origem: origemTexto() });
-    return true;
-  };
+  function pxCustom(nome, dados) { if (typeof window.fbq === 'function') window.fbq('trackCustom', nome, dados); }
 
-  /* ─── 3. Cliques: GA4 (pagina, secao, origem); Pixel: Contact no WhatsApp e Lead no Check-up ─── */
+  /* ─── 3. Cliques (GA4: pagina, secao, origem).
+         WhatsApp: evento clique_whatsapp no GA4 e Contact no Pixel.
+         Check-up: o clique NÃO é Lead. Vai como checkup_clique no GA4 e CheckupClique (evento próprio) no Pixel.
+         O Lead fica só no envio final do Check-up (API de Conversões, no app.alcancemkt.com). ─── */
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('[data-evento]');
     if (!a) return;
     var evento = a.getAttribute('data-evento'), secao = a.getAttribute('data-secao') || (pagina + '-desconhecida');
-    ga(evento, { pagina: pagina, secao: secao, origem: origemTexto(), link_url: a.href });
+    var dados = { pagina: pagina, secao: secao, origem: origemTexto(), link_url: a.href };
+    if (evento === 'clique_checkup') {
+      ga('checkup_clique', dados);
+      pxCustom('CheckupClique', { content_name: secao });
+      return;
+    }
+    ga(evento, dados);
     if (evento === 'clique_whatsapp') px('Contact', { content_name: secao });
-    if (evento === 'clique_checkup') window.alcanceLead(secao);
   });
 
   // para conferência (prévia e testes): window.alcanceOrigem mostra o que foi guardado
