@@ -78,10 +78,12 @@
 
   /* ─── 5. Meta Pixel e GA4: quem carrega é o aviso de cookies (/consent.js), só depois do "Aceitar".
          Aqui só enviamos eventos se eles já estiverem ligados. ─── */
-  function ga(nome, dados) { if (typeof window.gtag === 'function') window.gtag('event', nome, dados); }
-  function px(nome, dados) { if (typeof window.fbq === 'function') window.fbq('track', nome, dados); }
+  // Só envia eventos nos endereços oficiais (mesma lista do consent.js); em testes e prévias não envia nada.
+  var EM_ENDERECO_OFICIAL = ['alcancemkt.com', 'www.alcancemkt.com'].indexOf(location.hostname) !== -1;
+  function ga(nome, dados) { if (EM_ENDERECO_OFICIAL && typeof window.gtag === 'function') window.gtag('event', nome, dados); }
+  function px(nome, dados) { if (EM_ENDERECO_OFICIAL && typeof window.fbq === 'function') window.fbq('track', nome, dados); }
 
-  function pxCustom(nome, dados) { if (typeof window.fbq === 'function') window.fbq('trackCustom', nome, dados); }
+  function pxCustom(nome, dados) { if (EM_ENDERECO_OFICIAL && typeof window.fbq === 'function') window.fbq('trackCustom', nome, dados); }
 
   /* ─── 3. Cliques (GA4: pagina, secao, origem).
          WhatsApp: evento clique_whatsapp no GA4 e Contact no Pixel.

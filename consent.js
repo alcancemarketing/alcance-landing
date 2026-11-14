@@ -20,8 +20,14 @@
     try { localStorage.setItem(KEY, JSON.stringify({ v: VERSION, analytics: analytics, ts: Date.now() })); } catch (e) {}
   }
 
+  // GA4 e Pixel só carregam e enviam eventos nos endereços oficiais (lista de permitidos).
+  // Em localhost, IP, *.local, *.test, prévias etc. o aviso de cookies aparece, mas nada é carregado.
+  var HOSTS_OFICIAIS = ['alcancemkt.com', 'www.alcancemkt.com'];
+  function emEnderecoOficial() { return HOSTS_OFICIAIS.indexOf(location.hostname) !== -1; }
+
   function loadTracking() {
     if (loaded) return;
+    if (!emEnderecoOficial()) return;
     loaded = true;
 
     !function (f, b, e, v, n, t, s) {
