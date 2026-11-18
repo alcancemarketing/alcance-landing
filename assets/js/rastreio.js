@@ -54,7 +54,10 @@
       q.set('utm_medium', direto ? 'direto' : 'organico');
       q.set('utm_campaign', 'site');
     }
-    q.set('utm_content', posicao);
+    // Origem de anúncio: repassa o anúncio (utm_content) e o público (utm_term) guardados.
+    // Sem utm_content guardado (visita orgânica ou direta), vai a posição do botão, como antes.
+    q.set('utm_content', origem.utm_content || posicao);
+    if (origem.utm_term) q.set('utm_term', origem.utm_term);
     if (origem.fbclid) q.set('fbclid', origem.fbclid);
     if (origem.gclid) q.set('gclid', origem.gclid);
     return q;

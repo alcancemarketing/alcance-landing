@@ -8,16 +8,49 @@
   var MAX_AGE = 365 * 24 * 60 * 60 * 1000;
   var loaded = false;
 
-  function read() {
+  // A escolha fica no localStorage (por endereço) e também num cookie do domínio .alcancemkt.com,
+  // para o site e o Check-up (app.alcancemkt.com) compartilharem o mesmo aceite ou recusa.
+  function valida(raw) {
     try {
-      var o = JSON.parse(localStorage.getItem(KEY));
+      var o = JSON.parse(raw);
       if (o && o.v === VERSION && typeof o.analytics === 'boolean' && (Date.now() - o.ts) < MAX_AGE) return o;
     } catch (e) {}
     return null;
   }
 
+  function noDominioAlcance() { return /(^|\.)alcancemkt\.com$/.test(location.hostname); }
+
+  function lerCookie() {
+    var partes = document.cookie ? document.cookie.split(';') : [];
+    for (var i = 0; i < partes.length; i++) {
+      var p = partes[i].replace(/^\s+/, '');
+      if (p.indexOf(KEY + '=') !== 0) continue;
+      try { var v = valida(decodeURIComponent(p.slice(KEY.length + 1))); if (v) return v; } catch (e) {}
+    }
+    return null;
+  }
+
+  function gravarCookie(o) {
+    if (!noDominioAlcance()) return;
+    try {
+      document.cookie = KEY + '=' + encodeURIComponent(JSON.stringify(o)) +
+        '; domain=.alcancemkt.com; path=/; max-age=31536000; SameSite=Lax; Secure';
+    } catch (e) {}
+  }
+
+  function read() {
+    var c = lerCookie();
+    if (c) return c;
+    var o = null;
+    try { o = valida(localStorage.getItem(KEY)); } catch (e) {}
+    if (o) gravarCookie(o); // só existia no localStorage: copia para o cookie
+    return o;
+  }
+
   function write(analytics) {
-    try { localStorage.setItem(KEY, JSON.stringify({ v: VERSION, analytics: analytics, ts: Date.now() })); } catch (e) {}
+    var o = { v: VERSION, analytics: analytics, ts: Date.now() };
+    try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {}
+    gravarCookie(o);
   }
 
   // GA4 e Pixel só carregam e enviam eventos nos endereços oficiais (lista de permitidos).
