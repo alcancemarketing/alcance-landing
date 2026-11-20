@@ -58,6 +58,14 @@
   var HOSTS_OFICIAIS = ['alcancemkt.com', 'www.alcancemkt.com'];
   function emEnderecoOficial() { return HOSTS_OFICIAIS.indexOf(location.hostname) !== -1; }
 
+  // Modo de Consentimento do Google v2: os quatro sinais sempre mudam juntos.
+  function estadoConsentimento(v) {
+    return { ad_storage: v, analytics_storage: v, ad_user_data: v, ad_personalization: v };
+  }
+  function atualizaConsentimento(concedido) {
+    if (typeof window.gtag === 'function') window.gtag('consent', 'update', estadoConsentimento(concedido ? 'granted' : 'denied'));
+  }
+
   function loadTracking() {
     if (loaded) return;
     if (!emEnderecoOficial()) return;
@@ -76,6 +84,11 @@
 
     window.dataLayer = window.dataLayer || [];
     window.gtag = function () { window.dataLayer.push(arguments); };
+    // Modo de Consentimento do Google v2 (básico): primeiro o padrão negado, antes de qualquer outro comando.
+    window.gtag('consent', 'default', estadoConsentimento('denied'));
+    // O GA4 só carrega depois do aceite, então o consentimento é concedido assim que o rastreamento carrega
+    // (vale também para quem já tinha aceitado antes e não vê o aviso de novo).
+    atualizaConsentimento(true);
     var g = document.createElement('script');
     g.async = true;
     g.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA;
@@ -137,6 +150,7 @@
     if (analytics) {
       loadTracking();
     } else {
+      atualizaConsentimento(false); // só tem efeito se o GA4 já estava carregado
       clearCookies();
       if (wasLoaded) location.reload();
     }

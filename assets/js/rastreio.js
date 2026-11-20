@@ -106,6 +106,61 @@
     if (evento === 'clique_whatsapp') px('Contact', { content_name: secao });
   });
 
+  /* ─── 6. GA4 sem nenhum dado pessoal: rolagem (25, 50 e 75%) e seções vistas.
+         Cada marco e cada seção contam uma vez por visita (sessão do navegador). Só são enviados com o GA4 carregado
+         (depois do aceite) e no endereço oficial; o que acontece antes do aceite nunca é enviado depois. ─── */
+  var PREF_EV = 'alcance_ev_', enviados = {};
+  function gaAtivo() { return EM_ENDERECO_OFICIAL && typeof window.gtag === 'function'; }
+  function jaEnviou(k) { if (enviados[k]) return true; try { return !!sessionStorage.getItem(PREF_EV + k); } catch (e) { return false; } }
+  function marcaEnviado(k) { enviados[k] = 1; try { sessionStorage.setItem(PREF_EV + k, '1'); } catch (e) {} }
+
+  var marcosRolagem = [25, 50, 75], marcosCruzados = {}, rolagemAgendada = false;
+  function progressoRolagem() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    return max > 0 ? Math.min(100, Math.round(window.scrollY / max * 100)) : 0;
+  }
+  function checaRolagem() {
+    var p = progressoRolagem();
+    marcosRolagem.forEach(function (m) {
+      if (p < m || marcosCruzados[m]) return;
+      marcosCruzados[m] = true;
+      var k = 'rol_' + pagina + '_' + m;
+      if (!gaAtivo() || jaEnviou(k)) return;
+      marcaEnviado(k);
+      ga('rolagem', { pagina: pagina, origem: origemTexto(), percentual: m });
+    });
+  }
+  window.addEventListener('scroll', function () {
+    if (rolagemAgendada) return;
+    rolagemAgendada = true;
+    window.requestAnimationFrame(function () { rolagemAgendada = false; checaRolagem(); });
+  }, { passive: true });
+
+  // nome da seção = página + posição (mesmo vocabulário do data-secao: home-topo, home-tarja, home-servicos, home-fechamento...)
+  var SECOES = [['.topo', 'topo'], ['.pagina-topo', 'topo'], ['.tarja', 'tarja'], ['#problema', 'problema'], ['#servicos', 'servicos'],
+    ['#metodo', 'metodo'], ['#quem-somos', 'quem-somos'], ['#duvidas', 'duvidas'], ['.catalogo', 'catalogo'], ['#contato', 'fechamento']];
+  function observaSecoes() {
+    if (!('IntersectionObserver' in window)) return;
+    function observa(el, nome, margem) {
+      var io = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          io.disconnect();
+          var k = 'sec_' + nome;
+          if (!gaAtivo() || jaEnviou(k)) return;
+          marcaEnviado(k);
+          ga('secao_vista', { pagina: pagina, origem: origemTexto(), secao: nome });
+        });
+      }, { rootMargin: margem, threshold: 0 });
+      io.observe(el);
+    }
+    SECOES.forEach(function (s) { var el = document.querySelector(s[0]); if (el) observa(el, pagina + '-' + s[1], '0px 0px -30% 0px'); });
+    var rodape = document.querySelector('.rodape');
+    if (rodape) observa(rodape, pagina + '-rodape', '0px');
+  }
+  // começa depois do carregamento, quando o aviso de cookies já decidiu se o GA4 está ligado
+  if (document.readyState === 'complete') observaSecoes(); else window.addEventListener('load', observaSecoes);
+
   // para conferência (prévia e testes): window.alcanceOrigem mostra o que foi guardado
   window.alcanceOrigem = { origem: origem, pago: pago, utms: function (p) { return utms(p).toString(); } };
 })();
